@@ -1,69 +1,47 @@
-# steam-vr-wheel
-Wheel emulation using steamVR
-=============================
+# VR Stick Mapper
+_A functional translation layer between SteamVR devices and VJoy virtual joysticks_
 
-If you just want to use this go to:
-===================================
-https://github.com/mdovgialo/steam-vr-wheel/releases
+Inspired by the [steam-vr-wheel][https://github.com/mdovgialo/steam-vr-wheel] library.
 
+## Features
 
-For developers:
-================
+### Mappings
 
-Requires pyopenvr, wxpython (codename phoenix), and vjoy ( http://vjoystick.sourceforge.net/site/ Public domain )
-
-Uses pyvjoy binding from https://github.com/tidzo/pyvjoy
-
-Demos:
-======
-
-Wheel mode:
-https://www.youtube.com/watch?v=lb0zGBVwN4Y
-
-Joystick mode:
-https://www.youtube.com/watch?v=jjb92HQ0M74
+Controller mappings require some list of devices, by device class and role, and define functions to translate those devices' inputs into VJoy axes and buttons, as well as a set of event triggers to provide contextual haptic feedback.
 
 
+### Nodes
 
+Nodes take some piece(s) of state and perform a simple operation on it, usually converting it to either a float value or a button value.
 
+### Axes
 
+Axes produce a floating point value. Since VJoy axes expect a value between 0 and 1 (well, 0 and 32767, but we handle that bit behind the scenes), there are several helpers to scale, clamp, and otherwise manipulate your axis values to be compatible with VJoy axes.
 
-Instalation from sources (for developers):
-========================================
-install python 3.5+
+### Buttons
 
-install vjoy
+Buttons produce both a boolean state value and a four-state pairing of their current state and the previous tick's state, to allow effects when a button is first pressed or first released.
 
-with admin level cmd go to folder where is steam_vr_wheel
+### Composites
 
-write:
+You can translate and combine buttons and axes easily - an `AxisThresholdButton` is active when an axis value exceeds a specified threshold, you can combine buttons with arbitrary logic gates, reset an axis to a defined zero value when a button is pressed, etc. Combining the simple building blocks provided, you can produce highly refined input values, such as:
 
-pip install .
+* An axis whose value can be adjusted when a button is pressed, but remains fixed at its current value when the button is released (a `PushPullAxis`)
+* Arbitrarily complex gestures representing a sequence of movements along any number of axes
+* Actions restricted to a particular position, either in absolute space or relative to the user's HMD
+* Switching an axis between any number of complex inputs based on a series of gestures being performed
+* And infinitely more
 
+## Implementation
 
+### Graph-based functional model
 
+Each node has a single output and an arbitrary list of dependencies, and dependencies can nest to arbitrary depths. All state flows from the root `VrSystemState` node, with each node performing a simple operation on its inputs to produce an output.
 
-To run:
-=======
-open cmd, write:
+### No repeated computation
 
-vrwheel
+Nodes implement the multiton pattern, meaning that initializing a node with the same parameters and inputs twice produces the same in-memory object. This allows your mapping to reuse the same nodes across multiple sections without needing to implement caching yourself - the node will only compute once once all of its dependencies have been computed for the current tick.
 
-or 
+### Simple math
 
-vrjoystick
-
-or 
-
-vrpad
-
-For configurator - write
-
-vrpadconfig
-
-press ctrl+c to stop
-
-To uninstall:
-
-pip uninstall steam_vr_wheel
-
+Once a graph is initialized, the only operations taking place are simple floating point math and boolean logic. One tick through a graph of any complexity is blazing fast.
