@@ -3,6 +3,10 @@ _A functional translation layer between SteamVR devices and VJoy virtual joystic
 
 Inspired by the [steam-vr-wheel](https://github.com/mdovgialo/steam-vr-wheel) library.
 
+## Dependencies
+
+This tool is a translation layer between [SteamVR](https://www.steamvr.com/en/) and [VJoy](https://vjoy.en.softonic.com/), and thus relies on both being installed on your computer. It is, thus far, tested only on Windows machines running Windows Mixed Reality, but is likely to work on Windows machines running any SteamVR-compatible virtual reality interface.
+
 ## How to use
 
 If you want to use one of the prebuilt controller mappings, you can run it via the `map` script in the `bin` directory, like so: `./bin/map <mapping name>`, e.g. `./bin/map wheel`
