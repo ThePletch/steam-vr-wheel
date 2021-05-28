@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+
+from steam_vr_wheel.mappings.throttle_mapping import ThrottleMapping
+from steam_vr_wheel.mappings.wheel_mapping import WheelMapping
+import time
+
+import openvr
+import sys
+
+TICKS_PER_SECOND = 30
+
+PREBUILT_MAPPINGS = {
+    'throttle': ThrottleMapping,
+    'wheel': WheelMapping,
+}
+
+
+def show_available_mappings():
+    print(f"Available mappings: {', '.join(PREBUILT_MAPPINGS.keys())}")
+
+
+try:
+    MAPPING = PREBUILT_MAPPINGS[sys.argv[0]]
+except IndexError:
+    print("usage: map <mapping_name> <vjoy device id>")
+    show_available_mappings()
+    exit(127)
+except KeyError:
+    print(f"No such mapping '{sys.argv[0]}'.")
+    show_available_mappings()
+    exit(1)
+
+VJOY_DEVICE_ID = sys.argv.get(1) or 0
+
+
+openvr.init(openvr.VRApplication_Overlay)
+vrsystem = openvr.VRSystem()
+TICK_SECONDS = 1/TICKS_PER_SECOND
+
+contoller_mapping = MAPPING(vrsystem, VJOY_DEVICE_ID)
+
+while True:
+    before_work = time.time()
+    contoller_mapping.tick()
+    after_work = time.time()
+    left = TICK_SECONDS - (after_work - before_work)
+    if left > 0:
+        time.sleep(left)

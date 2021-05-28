@@ -1,0 +1,40 @@
+[[package]]
+name = "openvr"
+version = "1.16.801"
+description = "Unofficial python bindings for Valve OpenVR SDK"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+pyqt5 = ["numpy", "pyopengl", "pyqt5", "jinja2"]
+pyside2 = ["numpy", "pyopengl", "pyside2"]
+generate = ["clang"]
+glfw = ["numpy", "pyopengl", "glfw"]
+opengl = ["numpy", "pyopengl"]
+sdl2 = ["numpy", "pyopengl", "pysdl2"]
+wx = ["numpy", "pyopengl", "wxpython"]
+
+[[package]]
+name = "pyvjoy"
+version = "1.0.1"
+description = "Python bindings for vJoy"
+category = "main"
+optional = false
+python-versions = "*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.9"
+content-hash = "86def7747bf5870a5542a5fa85f4ad79e7ed0886240fc12d4693355cbbd312bd"
+
+[metadata.files]
+openvr = [
+    {file = "openvr-1.16.801-py3-none-any.whl", hash = "sha256:26c6ada64e64836b798e886eb91294afd190a08f10dd226468a58a98f0632b2b"},
+    {file = "openvr-1.16.801-py3.6.egg", hash = "sha256:72f53c276793a0225761a3626a808317814d38726a15d5a6984bc868bc8801f0"},
+    {file = "openvr-1.16.801.tar.gz", hash = "sha256:ec9448b50e9b72aa54e1b5c1ba40005c1afe8691e54d2032d954ac31438d9d6a"},
+]
+pyvjoy = [
+    {file = "pyvjoy-1.0.1-py3-none-any.whl", hash = "sha256:00a6c02259758125ddefa76699352a373f75c5a493b166d837dbe52111a2f85f"},
+    {file = "pyvjoy-1.0.1.tar.gz", hash = "sha256:e3e1382034a94353c802b3eea231b0fa950f8e726a813690c7ac706df807acad"},
+]

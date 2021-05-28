@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "steam-vr-wheel"
+version = "0.1.0"
+description = "Framework for mapping VR controllers to virtual joysticks"
+authors = ["Steve Pletcher <steve@steve-pletcher.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+openvr = "^1.16.801"
+pyvjoy = "^1.0.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
