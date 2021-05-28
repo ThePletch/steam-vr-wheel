@@ -1,3 +1,4 @@
+from collections import defaultdict
 import sys
 
 import openvr
@@ -9,13 +10,13 @@ from steam_vr_wheel.vrcontroller import Controller
 from . import PadConfig, ConfigException
 import multiprocessing
 
-BUTTONS = {}
-BUTTONS['left'] = {openvr.k_EButton_ApplicationMenu: 3, openvr.k_EButton_Grip: 2, openvr.k_EButton_SteamVR_Touchpad: -1, # 4 5 6 7 8
-                   openvr.k_EButton_SteamVR_Trigger: 1, openvr.k_EButton_A: 17,
-                   }
-BUTTONS['right'] = {openvr.k_EButton_ApplicationMenu: 11, openvr.k_EButton_Grip: 10, openvr.k_EButton_SteamVR_Touchpad: -2, # 12 13 14 15 16
-                    openvr.k_EButton_SteamVR_Trigger: 9, openvr.k_EButton_A: 18
-                    }
+BUTTONS = {
+    openvr.k_EButton_ApplicationMenu: 3,
+    openvr.k_EButton_Grip: 2,
+    openvr.k_EButton_SteamVR_Touchpad: -1, # 4 5 6 7 8
+    openvr.k_EButton_Axis2: 9, # 10 11 12 13
+    openvr.k_EButton_SteamVR_Trigger: 1,
+    openvr.k_EButton_A: 17}
 
 class LeftTrackpadAxisDisablerMixin:
     trackpad_left_enabled = False
@@ -34,7 +35,7 @@ class VirtualPad:
     trackpad_right_enabled = True
     def __init__(self):
         self.init_config()
-        device = 1
+        device = 2
         try:
             device = int(sys.argv[1])
         except:
@@ -43,15 +44,14 @@ class VirtualPad:
         self.device = VJoyDevice(device)
         self.trackpadRtouch = False
         self.trackpadLtouch = False
-        self.trackpadLX = 0
-        self.trackpadLY = 0
-        self.trackpadRX = 0
-        self.trackpadRY = 0
+        self.trackpadX = 0
+        self.trackpadY = 0
         self.sliderL = 0
         self.sliderR = 0
 
         self.previous_left_zone = 0
         self.previous_right_zone = 0
+        self.pressed_buttons = defaultdict(bool)
 
     def init_config(self):
         config_loaded = False
@@ -68,15 +68,12 @@ class VirtualPad:
                     app_ran = True
                 time.sleep(1)
 
-    def get_trackpad_zone(self, right=True):
+    def get_trackpad_zone(self):
         if self.config.multibutton_trackpad:
-            if right:
-                X, Y = self.trackpadRX, self.trackpadRY
-            else:
-                X, Y = self.trackpadLX, self.trackpadLY
-            zone = self._get_zone(X, Y) + right * 8 + 4
+            X, Y = self.trackpadX, self.trackpadY
+            zone = self._get_zone(X, Y) + 4
         else:
-            zone = 0 + right * 8 + 4
+            zone = 4
         return zone
 
     def _get_zone(self, x, y):
@@ -93,54 +90,44 @@ class VirtualPad:
             else:
                 return 4
 
-    def pressed_left_trackpad(self):
-        btn_id = self.get_trackpad_zone(right=False)
-        self.device.set_button(btn_id, True)
+    def pressed_trackpad(self):
+        btn_id = self.get_trackpad_zone()
+        self.button_update(btn_id, True)
 
-    def unpressed_left_trackpad(self):
+    def unpressed_trackpad(self):
         for btn_id in [4, 5, 6, 7, 8]:
             try:
-                self.device.set_button(btn_id, False)
+                self.button_update(btn_id, False)
             except NameError:
                 pass
+    
+    def button_update(self, button_id, pressed):
+        self.pressed_buttons[button_id] = pressed
+        self.device.set_button(button_id, pressed)
 
-    def pressed_right_trackpad(self):
-        btn_id = self.get_trackpad_zone(right=True)
-        self.device.set_button(btn_id, True)
-
-    def unpressed_right_trackpad(self):
-        for btn_id in [12, 13, 14, 15, 16]:
-            try:
-                self.device.set_button(btn_id, False)
-            except NameError:
-                pass
-
-    def set_button_press(self, button, hand):
-        if button == openvr.k_EButton_SteamVR_Trigger:
-            if not self.config.trigger_press_button:
-                return
+    def set_button_press(self, button):
+        # if button == openvr.k_EButton_SteamVR_Trigger:
+        #     if not self.config.trigger_press_button:
+        #         return
         try:
-            btn_id = BUTTONS[hand][button]
+            btn_id = BUTTONS[button]
             if btn_id is None:
+                print(button)
                 return
-            if btn_id == -1:
-                self.pressed_left_trackpad()
-            elif btn_id == -2:
-                self.pressed_right_trackpad()
+            elif btn_id == -1:
+                self.pressed_trackpad()
             else:
-                self.device.set_button(btn_id, True)
+                self.button_update(btn_id, True)
         except KeyError:
             pass
 
-    def set_button_unpress(self, button, hand):
+    def set_button_unpress(self, button):
         try:
-            btn_id = BUTTONS[hand][button]
+            btn_id = BUTTONS[button]
             if btn_id == -1:
-                self.unpressed_left_trackpad()
-            elif btn_id == -2:
-                self.unpressed_right_trackpad()
+                self.unpressed_trackpad()
             else:
-                self.device.set_button(btn_id, False)
+                self.button_update(btn_id, False)
         except KeyError:
             pass
 
@@ -177,35 +164,24 @@ class VirtualPad:
                 return True
         return False
 
-    def update(self, left_ctr: Controller, right_ctr: Controller):
-        self.device.set_axis(HID_USAGE_SL0, int(left_ctr.axis * 0x8000))
-        self.device.set_axis(HID_USAGE_SL1, int(right_ctr.axis * 0x8000))
-        self.trackpadLX = left_ctr.trackpadX
-        self.trackpadLY = left_ctr.trackpadY
+    def update(self, ctr: Controller):
+        trackpadXDelta = ctr.trackpadX - self.trackpadX
+        self.device.set_axis(HID_USAGE_SL0, int(trackpadXDelta * 0x8000))
+        self.trackpadX = ctr.trackpadX
+        self.trackpadY = ctr.trackpadY
 
         haptic_pulse_strength = 1000
 
-        left_zone = self._get_zone(self.trackpadLX, self.trackpadLY)
-        crossed = self._check_zone_change(left_zone, self.previous_left_zone)
-        self.previous_left_zone = left_zone
-        if crossed:
-            openvr.VRSystem().triggerHapticPulse(left_ctr.id, 0, haptic_pulse_strength)
-
-        if (self.trackpadLtouch or self.config.touchpad_always_updates) and self.trackpad_left_enabled:
-            self.device.set_axis(HID_USAGE_RX, int((left_ctr.trackpadX+1)/2 * 0x8000))
-            self.device.set_axis(HID_USAGE_RY, int(((-left_ctr.trackpadY+1)/2) * 0x8000))
-        self.trackpadRX = right_ctr.trackpadX
-        self.trackpadRY = right_ctr.trackpadY
-
+        
         right_zone = self._get_zone(self.trackpadRX, self.trackpadRY)
         crossed = self._check_zone_change(right_zone, self.previous_right_zone)
         self.previous_right_zone = right_zone
         if crossed:
-            openvr.VRSystem().triggerHapticPulse(right_ctr.id, 0, haptic_pulse_strength)
+            openvr.VRSystem().triggerHapticPulse(ctr.id, 0, haptic_pulse_strength)
 
         if (self.trackpadRtouch or self.config.touchpad_always_updates) and self.trackpad_right_enabled:
-            self.device.set_axis(HID_USAGE_X, int((right_ctr.trackpadX + 1) / 2 * 0x8000))
-            self.device.set_axis(HID_USAGE_Y, int(((-right_ctr.trackpadY + 1) / 2) * 0x8000))
+            self.device.set_axis(HID_USAGE_X, int((ctr.trackpadX + 1) / 2 * 0x8000))
+            self.device.set_axis(HID_USAGE_Y, int(((-ctr.trackpadY + 1) / 2) * 0x8000))
 
-    def edit_mode(self, left_ctr, right_ctr):
+    def edit_mode(self, ctr):
         pass

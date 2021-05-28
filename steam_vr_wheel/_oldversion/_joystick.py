@@ -77,33 +77,31 @@ class Joystick(RightTrackpadAxisDisablerMixin, LeftTrackpadAxisDisablerMixin, Vi
 
     def set_button_press(self, button, hand):
         super().set_button_press(button, hand)
-        if button == openvr.k_EButton_Grip and hand == 'left':
+        if button == openvr.k_EButton_Grip:
             self.throttle_z.grabbed()
             self.throttle_x.grabbed()
             self.throttle_y.grabbed()
-        if button == openvr.k_EButton_Grip and hand == 'right':
-            if self.config.joystick_grabbing_switch:
-                self.joystick_grabbed = not self.joystick_grabbed
-            else:
-                self.joystick_grabbed = True
+
+            # if self.config.joystick_grabbing_switch:
+            #     self.joystick_grabbed = not self.joystick_grabbed
+            # else:
+            #     self.joystick_grabbed = True
 
     def set_button_unpress(self, button, hand):
         super().set_button_unpress(button, hand)
-        if button == openvr.k_EButton_Grip and hand == 'left':
+        if button == openvr.k_EButton_Grip:
             self.throttle_z.ungrabbed()
             self.throttle_x.ungrabbed()
             self.throttle_y.ungrabbed()
-        if button == openvr.k_EButton_Grip and hand == 'right' and (not self.config.joystick_grabbing_switch):
-            self.joystick_grabbed = False
+        # if button == openvr.k_EButton_Grip and hand == 'right' and (not self.config.joystick_grabbing_switch):
+        #     self.joystick_grabbed = False
 
     def _update_joystick_normal(self, axisX, axisY, axisZ):
-
         self.device.set_axis(HID_USAGE_X, int(axisX * self.amplification * 0x8000))
         self.device.set_axis(HID_USAGE_Y, int(axisY * self.amplification * 0x8000))
         self.device.set_axis(HID_USAGE_Z, int(axisZ * 0x8000))
 
     def _update_grabbable_joystick(self, axisX, axisY, axisZ):
-
         self.grabbable_x.update(axisX)
         self.grabbable_y.update(axisY)
         self.grabbable_z.update(axisZ)
@@ -112,8 +110,8 @@ class Joystick(RightTrackpadAxisDisablerMixin, LeftTrackpadAxisDisablerMixin, Vi
         self.device.set_axis(HID_USAGE_Y, int(self.grabbable_y.x * self.amplification * 0x8000))
         self.device.set_axis(HID_USAGE_Z, int(self.grabbable_z.x * 0x8000))
 
-    def update(self, left_ctr, right_ctr):
-        super().update(left_ctr, right_ctr)
+    def update(self, right_ctr):
+        super().update(right_ctr)
 
         axisX = (-right_ctr.yaw + 90) / 180
         if right_ctr.roll >= 0:
@@ -128,9 +126,9 @@ class Joystick(RightTrackpadAxisDisablerMixin, LeftTrackpadAxisDisablerMixin, Vi
         else:
             self._update_joystick_normal(axisX, axisY, axisZ)
 
-        self.throttle_z.update(left_ctr.z)
-        self.throttle_y.update(left_ctr.y)
-        self.throttle_x.update(left_ctr.yaw)
+        self.throttle_z.update(right_ctr.z)
+        self.throttle_y.update(right_ctr.y)
+        self.throttle_x.update(right_ctr.x)
 
         self.device.set_axis(HID_USAGE_RZ, int(self.throttle_z.x * 0x8000))
         self.device.set_axis(HID_USAGE_RY, int(self.throttle_y.x  * 0x8000))

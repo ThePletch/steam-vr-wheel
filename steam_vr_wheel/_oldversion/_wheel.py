@@ -15,15 +15,6 @@ def check_result(result):
         error_name = openvr.VROverlay().getOverlayErrorNameFromEnum(result)
         raise Exception("OpenVR Error:", error_name)
 
-def print_matrix(matrix):
-    l = []
-    for i in range(3):
-        ll = []
-        for j in range(4):
-            ll.append(matrix[j])
-        l.append(ll)
-    print(l)
-
 
 def initRotationMatrix(axis, angle, matrix=None):
     # angle in radians
@@ -226,7 +217,6 @@ class SteeringWheelImage:
         self.transform[0][3] = point.x
         self.transform[1][3] = point.y
         self.transform[2][3] = point.z
-        print(point.x, point.y, point.z)
         self.size = size
         fn = self.vroverlay.function_table.setOverlayTransformAbsolute
         fn(self.wheel, openvr.TrackingUniverseSeated, openvr.byref(self.transform))

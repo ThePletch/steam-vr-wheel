@@ -2,7 +2,7 @@ import os
 import sys
 from ctypes import *
 
-from .constants import DLL_FILENAME
+from .constants import DLL_FILENAME, VJD_STAT_FREE
 from .exceptions import *
 from ctypes import wintypes	# Makes this lib work in Python36
 
@@ -80,7 +80,7 @@ def SetAxis(AxisValue,rID,AxisID):
 
 	#TODO validate AxisID
 	#TODO validate AxisValue
-
+	# print(AxisValue, rID, AxisID)
 	result = _vj.SetAxis(AxisValue,rID,AxisID)
 	if result == 0:
 		#TODO raise specific exception
