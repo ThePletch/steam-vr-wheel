@@ -1,7 +1,7 @@
 # VR Stick Mapper
 _A functional translation layer between SteamVR devices and VJoy virtual joysticks_
 
-Inspired by the [steam-vr-wheel][https://github.com/mdovgialo/steam-vr-wheel] library.
+Inspired by the [steam-vr-wheel](https://github.com/mdovgialo/steam-vr-wheel) library.
 
 ## Features
 
