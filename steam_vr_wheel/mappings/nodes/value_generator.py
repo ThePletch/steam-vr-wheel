@@ -31,21 +31,21 @@ class ValueConsumer(metaclass=MultitonNode):
     def __dependencies_str__(self) -> str:
         if any(self.dependencies):
             return f"({', '.join(['='.join([k, repr(v)]) for k, v in self.dependencies.items()])})"
-        
+
         return ''
-    
+
     def __config_params_str__(self) -> str:
         config_params = self._parameterized_on()
         if any(config_params):
             return f"({', '.join(repr(c) for c in config_params)})"
-        
+
         return ''
 
     def __repr__(self) -> str:
         return (
             f"[{self.__class__.__name__}{self.__config_params_str__()}{self.__dependencies_str__()}]"
         )
-    
+
     def _enforce_requirements(self) -> None:
         missing_requirements = self.requirements - set(self.dependencies.keys())
 
@@ -70,7 +70,7 @@ class ValueConsumer(metaclass=MultitonNode):
         self.last_tick_update = tick_index
 
         self.update_with_inputs(inputs)
-    
+
     @abstractmethod
     def update_with_inputs(self, inputs: dict[str, Any]) -> None:
         pass
@@ -82,10 +82,10 @@ class ValueGenerator(Generic[O], ValueConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.bound_children: list[ValueGenerator[Any]] = []
-    
+
     def bind_child(self, child: ValueGenerator[Any]) -> None:
         self.bound_children.append(child)
-    
+
     def update(self, tick_index: int) -> None:
         super().update(tick_index)
 
@@ -94,7 +94,7 @@ class ValueGenerator(Generic[O], ValueConsumer):
 
     def update_with_inputs(self, inputs: dict[str, Any]) -> None:
         self.current_value = self.generate_output(inputs)
-    
+
     @abstractmethod
     def generate_output(self, inputs: dict[str, Any]) -> O:
         pass

@@ -13,7 +13,7 @@ class SwitchAxis(Axis):
     def generate_output(self, inputs: dict[str, Any]) -> float:
         if inputs['switch_button']['active']:
             return inputs['on_axis']  # type: ignore
-        
+
         return inputs['off_axis']  # type: ignore
 
 
@@ -22,7 +22,7 @@ class PairAxis(Axis):
 
     def __init__(self, axis_a: Axis, axis_b: Axis):
         super().__init__(dependencies={'axis_a': axis_a, 'axis_b': axis_b})
-    
+
     @abstractmethod
     def combine_states(self, axis_a: float, axis_b: float) -> float:
         pass
@@ -39,7 +39,7 @@ class SumAxis(PairAxis):
 class DifferenceAxis(PairAxis):
     def combine_states(self, axis_a: float, axis_b: float) -> float:
         return axis_a - axis_b
-        
+
 
 class ProductAxis(PairAxis):
     def combine_states(self, axis_a: float, axis_b: float) -> float:
@@ -66,11 +66,11 @@ class InvertedAxis(Axis):
 
     def __init__(self, parent_axis: Axis):
         super().__init__(dependencies={'parent_axis': parent_axis})
-    
+
     def generate_output(self, inputs: dict[str, Any]) -> float:
         return -1 * inputs['parent_axis']  # type: ignore
 
 
 class MeanAxis(PairAxis):
     def combine_states(self, axis_a: float, axis_b: float) -> float:
-        return (axis_a + axis_b)/2
+        return (axis_a + axis_b) / 2

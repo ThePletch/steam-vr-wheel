@@ -2,9 +2,10 @@ from steam_vr_wheel.mappings.nodes.axis import Axis
 from steam_vr_wheel.mappings.nodes.button import Button
 from typing import Any, Hashable, Type
 
+
 class AxisMutator(Axis):
     requirements = {'parent_axis'}
-    
+
     def __init__(self, parent_axis: Axis):
         super().__init__(dependencies={'parent_axis': parent_axis})
 
@@ -36,7 +37,7 @@ def AxisShifter(axis_min: float, axis_max: float, shift_amount: float) -> type[A
             axis_range = axis_max - axis_min
 
             return (inputs['parent_axis'] - axis_min + shift_amount) % axis_range + axis_min
-        
+
     return _ConfiguredAxisShifter
 
 
@@ -49,7 +50,7 @@ def AxisClamp(axis_min: float, axis_max: float) -> type[AxisMutator]:
 
         def generate_output(self, inputs: dict[str, float]) -> float:
             return min(axis_max, max(inputs['parent_axis'], axis_min))
-    
+
     return _ConfiguredAxisClamp
 
 
@@ -62,9 +63,9 @@ def DeadzoneAxis(deadzone: float) -> type[AxisMutator]:
         def generate_output(self, inputs: dict[str, float]) -> float:
             if abs(inputs['parent_axis']) < deadzone:
                 return 0.0
-            
+
             return inputs['parent_axis']
-    
+
     return _ConfiguredDeadzoneAxis
 
 
@@ -77,11 +78,11 @@ class ResettableAxis(Axis):
     def __init__(self, reset_button: Button, parent_axis: Axis):
         self.baseline_value = 0.0
         super().__init__(dependencies={'reset_button': reset_button, 'parent_axis': parent_axis})
-    
+
     def generate_output(self, inputs: dict[str, Any]) -> float:
         if inputs['reset_button']['tick_state'] == 'just_pressed':
             self.baseline_value = inputs['parent_axis']
-        
+
         return inputs['parent_axis'] - self.baseline_value  # type: ignore  # todo make input dicts more restrictive
 
 
@@ -96,24 +97,25 @@ def GatedAxis(disabled_value: float = 0.0) -> Type[Axis]:
 
         def __init__(self, gate_button: Button, parent_axis: Axis):
             super().__init__(dependencies={'gate_button': gate_button, 'parent_axis': parent_axis})
-        
+
         def generate_output(self, inputs: dict[str, Any]) -> float:
             if inputs['gate_button']['active']:
                 return inputs['parent_axis']  # type: ignore
-            
+
             return disabled_value
-    
+
     return _ConfiguredGatedAxis
 
 
 # Composition of GatedAxis and ResettableAxis pointed at the same button.
-# Whenever the button is pressed, the axis is zeroed out and reports any change in its value until the button is released.
+# Whenever the button is pressed, the axis is zeroed out and reports any
+# change in its value until the button is released.
 def DeltaAxis(button: Button, parent_axis: Axis) -> Axis:
     return GatedAxis(disabled_value=0)(button, ResettableAxis(button, parent_axis))
 
 
 class PushPullAxis(Axis):
-    
+
     requirements = {'enable_delta_button', 'delta_axis'}
 
     baseline_value: float
@@ -122,13 +124,18 @@ class PushPullAxis(Axis):
     def __init__(self, enable_delta_button: Button, parent_axis: Axis):
         self.baseline_value = 0.0
         self.modified_value = 0.0
-        super().__init__(dependencies={'enable_delta_button': enable_delta_button, 'delta_axis': DeltaAxis(enable_delta_button, parent_axis)})
-    
+        super().__init__(
+            dependencies={
+                'enable_delta_button': enable_delta_button,
+                'delta_axis': DeltaAxis(
+                    enable_delta_button,
+                    parent_axis)})
+
     def generate_output(self, inputs: dict[str, Any]) -> float:
         delta_button_tick_state = inputs['enable_delta_button']['tick_state']
         if delta_button_tick_state == 'just_unpressed':
             self.baseline_value = self.modified_value
         elif inputs['enable_delta_button']['active']:
             self.modified_value = self.baseline_value + inputs['delta_axis']
-        
+
         return self.modified_value

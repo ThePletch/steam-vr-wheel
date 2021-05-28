@@ -1,10 +1,9 @@
 from abc import abstractmethod
 import logging
-from dataclasses import dataclass
 import time
 from steam_vr_wheel.mappings.nodes.axis import Axis
 from steam_vr_wheel.mappings.nodes.button import Button
-from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer, ValueGenerator
+from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer
 from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerRole, DeviceClass, VrSystemState
 from typing import Iterable, Iterator
 
@@ -12,7 +11,7 @@ import openvr
 from steam_vr_wheel.pyvjoy.vjoydevice import VJoyDevice
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(name)s - %(message)s")
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(level name)s] %(name)s - %(message)s")
 
 SUPPORTED_BUTTON_EVENTS = [
     openvr.VREvent_ButtonTouch,
@@ -21,10 +20,12 @@ SUPPORTED_BUTTON_EVENTS = [
     openvr.VREvent_ButtonUnpress
 ]
 
+
 def events(vr_system: openvr.IVRSystem) -> Iterator[openvr.VREvent_t]:
     event = openvr.VREvent_t()
     while vr_system.pollNextEvent(event):
         yield event
+
 
 class ControllerMapping:
     AXIS_PRECISION = 0x8000
@@ -64,16 +65,17 @@ class ControllerMapping:
         while time_waited < self.DEVICE_WAIT_TIMEOUT:
             if not (missing_controllers := self.controllers_missing()):
                 return
-            
+
             missing_list = ", ".join(".".join(controller) for controller in missing_controllers)
             logger.info(f"Waiting for controller(s): {missing_list}")
             logger.debug(f"Polling again in {self.DEVICE_POLL_TIME} seconds...")
             time.sleep(self.DEVICE_POLL_TIME)
             time_waited += self.DEVICE_POLL_TIME
             self.root_node.load_devices_by_index()
-        
-        raise TimeoutError(f"Waited longer than maximum wait time of {self.DEVICE_WAIT_TIMEOUT} for required controllers. Giving up.")
-    
+
+        raise TimeoutError(
+            f"Waited longer than maximum wait time of {self.DEVICE_WAIT_TIMEOUT} for required controllers. Giving up.")
+
     def controllers_missing(self) -> list[tuple[DeviceClass, ControllerRole]]:
         missing_controllers: list[tuple[DeviceClass, ControllerRole]] = []
         for device_class, controller_role in self.required_devices:
@@ -81,9 +83,9 @@ class ControllerMapping:
                 self.root_node.device_id_for_type(device_class, controller_role)
             except IndexError:
                 missing_controllers.append((device_class, controller_role))
-        
+
         return missing_controllers
-    
+
     # a series of nodes stemming from the root node that generate a mapping to vjoy axes
     @abstractmethod
     def generate_axis_mapping(self, root_node: VrSystemState) -> dict[int, Axis]:
@@ -102,11 +104,11 @@ class ControllerMapping:
 
         self.sync_axes()
         self.sync_buttons()
-    
+
     def sync_axes(self) -> None:
         for axis_id, axis_node in self.axis_mapping.items():
             self.vjoy_device.set_axis(axis_id, int(axis_node.current_value * self.AXIS_PRECISION))
-    
+
     def sync_buttons(self) -> None:
         for button_id, button_node in self.button_mapping.items():
             self.vjoy_device.set_button(button_id, button_node.current_value['active'])

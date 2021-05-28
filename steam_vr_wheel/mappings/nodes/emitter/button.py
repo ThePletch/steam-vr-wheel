@@ -2,6 +2,7 @@ from typing import Any
 from steam_vr_wheel.mappings.nodes.button import BaseButton
 import time
 
+
 class AlwaysOffButton(BaseButton):
     def get_button_state_this_tick(self, _: Any) -> bool:
         return False
@@ -28,6 +29,5 @@ class FlickeringButton(BaseButton):
         if (current_time - self.last_flicker) > self.interval and self.state:
             self.last_flicker = current_time
             return False
-        
+
         return True
-        

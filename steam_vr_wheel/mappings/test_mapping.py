@@ -22,6 +22,7 @@ STANDARD_BUTTONS = [
     openvr.k_EButton_SteamVR_Touchpad,
 ]
 
+
 def standard_steamvr_controller_axis_profile(controller_state: ControllerStateGenerator) -> dict[int, Axis]:
     return {
         HID_USAGE_X: ScaleAxis(1, 0)(XAxis(controller_state)),
@@ -33,6 +34,7 @@ def standard_steamvr_controller_axis_profile(controller_state: ControllerStateGe
         HID_USAGE_SL0: ControllerAxis(1, 'x')(controller_state)  # trigger throttle
     }
 
+
 def standard_steamvr_controller_button_profile(controller_state: ControllerStateGenerator) -> dict[int, Button]:
     basic_buttons = []
     for openvr_button_id in STANDARD_BUTTONS:
@@ -40,21 +42,49 @@ def standard_steamvr_controller_button_profile(controller_state: ControllerState
         basic_buttons.append(DirectButton(openvr_button_id, 'press')(controller_state))
 
     axial_buttons = [
-        AxisThresholdButton(TOUCHPAD_EDGE_BUTTON_THRESHOLD, '>')(ControllerAxis(0, 'y')(controller_state)), # touchpad top
-        AxisThresholdButton(TOUCHPAD_EDGE_BUTTON_THRESHOLD, '>')(ControllerAxis(0, 'x')(controller_state)), # touchpad right
-        AxisThresholdButton(-1 * TOUCHPAD_EDGE_BUTTON_THRESHOLD, '<')(ControllerAxis(0, 'y')(controller_state)), # touchpad bottom
-        AxisThresholdButton(-1 * TOUCHPAD_EDGE_BUTTON_THRESHOLD, '<')(ControllerAxis(0, 'x')(controller_state)), # touchpad left
-        AxisThresholdButton(THUMBSTICK_EDGE_BUTTON_THRESHOLD, '>')(ControllerAxis(2, 'y')(controller_state)), # thumbstick top
-        AxisThresholdButton(THUMBSTICK_EDGE_BUTTON_THRESHOLD, '>')(ControllerAxis(2, 'x')(controller_state)), # thumbstick right
-        AxisThresholdButton(-1 * THUMBSTICK_EDGE_BUTTON_THRESHOLD, '<')(ControllerAxis(2, 'y')(controller_state)), # thumbstick bottom
-        AxisThresholdButton(-1 * THUMBSTICK_EDGE_BUTTON_THRESHOLD, '<')(ControllerAxis(2, 'x')(controller_state)), # thumbstick left
+        AxisThresholdButton(
+            TOUCHPAD_EDGE_BUTTON_THRESHOLD,
+            '>')(
+            ControllerAxis(
+                0,
+                'y')(controller_state)),
+        # touchpad top
+        AxisThresholdButton(
+            TOUCHPAD_EDGE_BUTTON_THRESHOLD,
+            '>')(
+            ControllerAxis(
+                0,
+                'x')(controller_state)),
+        # touchpad right
+        AxisThresholdButton(-1 * TOUCHPAD_EDGE_BUTTON_THRESHOLD, '<')(ControllerAxis(0, 'y')
+                                                                      (controller_state)),  # touchpad bottom
+        AxisThresholdButton(-1 * TOUCHPAD_EDGE_BUTTON_THRESHOLD, '<')(ControllerAxis(0, 'x')
+                                                                      (controller_state)),  # touchpad left
+        AxisThresholdButton(
+            THUMBSTICK_EDGE_BUTTON_THRESHOLD,
+            '>')(
+            ControllerAxis(
+                2,
+                'y')(controller_state)),
+        # thumbstick top
+        AxisThresholdButton(
+            THUMBSTICK_EDGE_BUTTON_THRESHOLD,
+            '>')(
+            ControllerAxis(
+                2,
+                'x')(controller_state)),
+        # thumbstick right
+        AxisThresholdButton(-1 * THUMBSTICK_EDGE_BUTTON_THRESHOLD, '<')(ControllerAxis(2, 'y')
+                                                                        (controller_state)),  # thumbstick bottom
+        AxisThresholdButton(-1 * THUMBSTICK_EDGE_BUTTON_THRESHOLD, '<')(ControllerAxis(2, 'x')
+                                                                        (controller_state)),  # thumbstick left
     ]
-
 
     return {
         i + 1: button
         for i, button in enumerate([*basic_buttons, *axial_buttons])
     }
+
 
 class TestController(ControllerMapping):
     required_devices = [
@@ -63,9 +93,6 @@ class TestController(ControllerMapping):
 
     def generate_axis_mapping(self, root_node: VrSystemState) -> dict[int, Axis]:
         return standard_steamvr_controller_axis_profile(ControllerStateByType('controller', 'right_hand')(root_node))
-        
 
     def generate_button_mapping(self, root_node: VrSystemState) -> dict[int, Button]:
         return standard_steamvr_controller_button_profile(ControllerStateByType('controller', 'right_hand')(root_node))
-
-        

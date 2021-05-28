@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Any, Callable, Final, Hashable, Iterable, Literal, TypeVar, TypedDict
+from typing import Any, Callable, Hashable, Iterable, Literal, TypeVar, TypedDict
 
 import openvr
 
@@ -26,6 +26,7 @@ class ControllerButtonStatePackage(TypedDict):
     touched: dict[int, bool]
     pressed: dict[int, bool]
 
+
 class ControllerStatePackage(TypedDict):
     pose: openvr.HmdMatrix34_t
     velocity: openvr.HmdVector3_t
@@ -39,24 +40,26 @@ class VrSystemStatePackage(TypedDict):
     controller_state: dict[int, openvr.VRControllerState_t]
     button_state: dict[int, ControllerButtonStatePackage]
 
+
 class VrSystemState(ValueGenerator[VrSystemStatePackage]):
     def __init__(self, vr_system: openvr.IVRSystem):
         super().__init__()
         self.vr_system = vr_system
         self.buttons_pressed: dict[int, dict[int, bool]] = defaultdict(lambda: defaultdict(bool))
         self.buttons_touched: dict[int, dict[int, bool]] = defaultdict(lambda: defaultdict(bool))
-        
+
         # index 1: pose class (i.e. HMD vs Controller)
         # index 2: object role (e.g. left vs right hand. if N/A, role is always 0)
         self.device_indexes: dict[int, dict[int, int]] = defaultdict(dict)
         self.load_devices_by_index()
-    
+
     def load_devices_by_index(self) -> None:
         self.device_indexes.clear()
-        
+
         for i in range(openvr.k_unMaxTrackedDeviceCount):
-            self.device_indexes[self.vr_system.getTrackedDeviceClass(i)][self.vr_system.getControllerRoleForTrackedDeviceIndex(i)] = i
-    
+            self.device_indexes[self.vr_system.getTrackedDeviceClass(
+                i)][self.vr_system.getControllerRoleForTrackedDeviceIndex(i)] = i
+
     def device_id_for_type(self, device_class: DeviceClass, controller_role: ControllerRole = 'no_role') -> int:
         device_class_constant = DEVICE_CLASS_NAME_TO_SUPPORTED_OPENVR_CONSTANTS[device_class]
         controller_role_constant = CONTROLLER_ROLE_NAME_TO_SUPPORTED_OPENVR_CONSTANTS[controller_role]
@@ -64,7 +67,7 @@ class VrSystemState(ValueGenerator[VrSystemStatePackage]):
             return self.device_indexes[device_class_constant][controller_role_constant]
         except KeyError:
             raise IndexError(f"No controller found for specified class '{device_class}' and role '{controller_role}'")
-    
+
     def _poll_button_events(self) -> None:
         event = openvr.VREvent_t()
         while self.vr_system.pollNextEvent(event):
@@ -78,10 +81,11 @@ class VrSystemState(ValueGenerator[VrSystemStatePackage]):
                 self.buttons_pressed[event.trackedDeviceIndex][event.data.controller.button] = True
             elif event.eventType == openvr.VREvent_ButtonUnpress:
                 self.buttons_pressed[event.trackedDeviceIndex][event.data.controller.button] = False
-    
-    def _button_state_package(self) -> dict[int, ControllerButtonStatePackage]: 
+
+    def _button_state_package(self) -> dict[int, ControllerButtonStatePackage]:
         controller_ids = set(self.buttons_pressed.keys()) | set(self.buttons_touched.keys())
-        result: dict[int, ControllerButtonStatePackage] = defaultdict(lambda: ControllerButtonStatePackage(touched=defaultdict(bool), pressed=defaultdict(bool)))
+        result: dict[int, ControllerButtonStatePackage] = defaultdict(
+            lambda: ControllerButtonStatePackage(touched=defaultdict(bool), pressed=defaultdict(bool)))
         for controller_id in controller_ids:
             result[controller_id] = ControllerButtonStatePackage(
                 touched=self.buttons_touched[controller_id],
@@ -89,7 +93,7 @@ class VrSystemState(ValueGenerator[VrSystemStatePackage]):
             )
 
         return result
-        
+
     def _fetch_poses(self) -> dict[int, Iterable[openvr.TrackedDevicePose_t]]:
         # C-style array declaration: one device pose object per device being tracked
         # let it be known that i hate this
@@ -98,7 +102,7 @@ class VrSystemState(ValueGenerator[VrSystemStatePackage]):
         self.vr_system.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseSeated, 0, poses)
 
         return poses  # type: ignore
-    
+
     def _get_controller_states(self) -> dict[int, openvr.VRControllerState_t]:
         return {
             i: self.vr_system.getControllerState(i)[1]
@@ -116,6 +120,8 @@ class VrSystemState(ValueGenerator[VrSystemStatePackage]):
 
 
 O = TypeVar('O', bound=Hashable)
+
+
 class VrSystemStateConsumer(ValueGenerator[O]):
     requirements = {'base_state'}
 
@@ -124,6 +130,7 @@ class VrSystemStateConsumer(ValueGenerator[O]):
 
 
 ControllerStateGenerator = VrSystemStateConsumer[ControllerStatePackage]
+
 
 def ControllerState(controller_id: int) -> type[ControllerStateGenerator]:
     class _ConfiguredControllerState(ControllerStateGenerator):
@@ -139,7 +146,7 @@ def ControllerState(controller_id: int) -> type[ControllerStateGenerator]:
                 'button_state': inputs['base_state']['button_state'][controller_id],
                 'controller_state': inputs['base_state']['controller_state'][controller_id],
             }
-    
+
     return _ConfiguredControllerState
 
 
@@ -148,12 +155,13 @@ class ControllerStateConsumer(ValueGenerator[O]):
 
     def __init__(self, controller_state: ValueGenerator[ControllerStatePackage]):
         super().__init__(dependencies={'base_state': controller_state})
-    
+
     def generate_output(self, inputs: dict[str, ControllerStatePackage]) -> O:
         return super().generate_output(inputs)
 
 
-def ControllerStateByType(device_class: DeviceClass,  role: ControllerRole = 'no_role') -> Callable[[VrSystemState], ControllerStateGenerator]:
+def ControllerStateByType(device_class: DeviceClass,
+                          role: ControllerRole = 'no_role') -> Callable[[VrSystemState], ControllerStateGenerator]:
     def _GetControllerState(vr_system: VrSystemState) -> ControllerStateGenerator:
         return ControllerState(vr_system.device_id_for_type(device_class, role))(vr_system)
 

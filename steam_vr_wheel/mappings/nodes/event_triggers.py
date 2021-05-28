@@ -5,7 +5,8 @@ from steam_vr_wheel.mappings.nodes.button import Button, ButtonTickState
 from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer
 
 
-def HapticPulseTrigger(controller_id, pulse_events: set[ButtonTickState], duration_mcs: int = 1000) -> type[ValueConsumer]:
+def HapticPulseTrigger(controller_id, pulse_events: set[ButtonTickState],
+                       duration_mcs: int = 1000) -> type[ValueConsumer]:
     class _ConfiguredHapticPulseTrigger(ValueConsumer):
         requirements = {'parent_button'}
 
@@ -20,5 +21,5 @@ def HapticPulseTrigger(controller_id, pulse_events: set[ButtonTickState], durati
         def update_with_inputs(self, inputs: dict[str, Any]) -> None:
             if inputs['parent_button']['tick_state'] in pulse_events:
                 self.vr_system.triggerHapticPulse(controller_id, 0, duration_mcs)
-    
+
     return _ConfiguredHapticPulseTrigger

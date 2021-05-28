@@ -1,7 +1,7 @@
 from __future__ import annotations
 from collections import defaultdict
 import logging
-from typing import Any, Hashable, Iterable, Protocol, TypeVar
+from typing import Any, Hashable, Protocol
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(name)s - %(message)s")
@@ -23,7 +23,8 @@ class MultitonNode(type):
         hashed_kwargs = [(key, hash(value)) for key, value in kwargs.items()]
 
         hash_tuple = (*hashed_args, *cls._parameterized_on(), *hashed_kwargs)
-        repr_args = [*[repr(p) for p in cls._parameterized_on()], *[f'{key}: {repr(value)}' for key, value in kwargs.items()]]
+        repr_args = [*[repr(p) for p in cls._parameterized_on()], *
+                     [f'{key}: {repr(value)}' for key, value in kwargs.items()]]
         instance_hash = hash(hash_tuple)
         try:
             new_instance = MultitonNode.__instances[cls.__name__][instance_hash]
@@ -31,11 +32,8 @@ class MultitonNode(type):
 
         except KeyError:
             logger.debug(f"Cache miss for {cls.__name__} with args {', '.join(repr_args)}, building new instance")
-            try:
-                new_instance = super(MultitonNode, cls).__call__(*args, **kwargs)  # type: ignore # mypy gets confused by metaclass typing
-            except TypeError:
-                import pdb; pdb.set_trace()
-                print("A")
+
+            new_instance = super(MultitonNode, cls).__call__(*args, **kwargs)  # type: ignore # mypy gets confused by metaclass typing
             MultitonNode.__instances[cls.__name__][instance_hash] = new_instance
-        
+
         return new_instance

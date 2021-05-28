@@ -13,7 +13,8 @@ class Wheel(Axis):
 
     def generate_output(self, inputs: dict[str, Any]) -> float:
         # compute angle in Z plane between two controllers
-        dx = inputs['right_controller']['pose'][0][3] - inputs['left_controller']['pose'][0][3]  # x distance from left to right
-        dy = inputs['right_controller']['pose'][1][3] - inputs['left_controller']['pose'][1][3]  # y distance from left to right
+        dx = inputs['right_controller']['pose'][0][3] - \
+            inputs['left_controller']['pose'][0][3]  # x distance from left to right
+        dy = inputs['right_controller']['pose'][1][3] - \
+            inputs['left_controller']['pose'][1][3]  # y distance from left to right
         return math.atan2(dy, dx)
-

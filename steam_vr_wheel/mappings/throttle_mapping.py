@@ -27,7 +27,7 @@ Intended features:
             THROTTLE MODE:
                 Adjust throttle: Hold grip, rotate controller CW, then move forward/backward
                 Lateral/vertical thrusters: Thumbstick
-                Boost: While adjusting throttle, flick controller 
+                Boost: While adjusting throttle, flick controller
                     * This works off velocity, not distance, so a firm flick is enough
             THRUSTER MODE:
                 Apply thrust: Hold grip, rotate controller CW, then move controller in desired thrust direction.
@@ -77,6 +77,8 @@ Intended features:
             Back: Press menu button
             Next/previous tab: Hold grip and move controller left/right
 """
+
+
 class ThrottleMapping(ControllerMapping):
     required_devices = [
         ('controller', 'right_hand')
@@ -87,7 +89,7 @@ class ThrottleMapping(ControllerMapping):
         grip_button = DirectButton(openvr.k_EButton_Grip, 'press')(controller_state)
         thumb_x = ControllerAxis(2, 'x')(controller_state)
         thumb_y = ControllerAxis(2, 'y')(controller_state)
-        
+
         return {
             HID_USAGE_X: ScaleAxis(0.5, 0)(thumb_x),
             HID_USAGE_Y: ScaleAxis(0.5, 0)(thumb_y),
