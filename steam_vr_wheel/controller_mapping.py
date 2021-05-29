@@ -8,7 +8,7 @@ from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerRole, Device
 from typing import Iterable, Iterator
 
 import openvr
-from steam_vr_wheel.pyvjoy.vjoydevice import VJoyDevice
+from pyvjoy.vjoydevice import VJoyDevice
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(level name)s] %(name)s - %(message)s")

@@ -16,7 +16,7 @@ from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerStateByType,
 from steam_vr_wheel.mappings.nodes.wheel import Wheel
 from steam_vr_wheel.controller_mapping import ControllerMapping
 
-from steam_vr_wheel.pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z, HID_USAGE_RX, HID_USAGE_RY, HID_USAGE_RZ, HID_USAGE_SL0, HID_USAGE_SL1
+from pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z, HID_USAGE_RX, HID_USAGE_RY, HID_USAGE_RZ, HID_USAGE_SL0, HID_USAGE_SL1
 
 TWIST_GESTURE_THRESHOLD = 0.8
 TOUCHPAD_EDGE_BUTTON_THRESHOLD = 0.7

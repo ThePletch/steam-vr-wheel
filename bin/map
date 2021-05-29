@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 from steam_vr_wheel.mappings.throttle_mapping import ThrottleMapping
 from steam_vr_wheel.mappings.wheel_mapping import WheelMapping
 import time
@@ -14,30 +15,16 @@ PREBUILT_MAPPINGS = {
     'wheel': WheelMapping,
 }
 
-
-def show_available_mappings():
-    print(f"Available mappings: {', '.join(PREBUILT_MAPPINGS.keys())}")
-
-
-try:
-    MAPPING = PREBUILT_MAPPINGS[sys.argv[0]]
-except IndexError:
-    print("usage: map <mapping_name> <vjoy device id>")
-    show_available_mappings()
-    exit(127)
-except KeyError:
-    print(f"No such mapping '{sys.argv[0]}'.")
-    show_available_mappings()
-    exit(1)
-
-VJOY_DEVICE_ID = sys.argv.get(1) or 0
-
+parser = argparse.ArgumentParser(description="Run a SteamVR to VJoy mapping")
+parser.add_argument('mapping', type=str, help=f"The name of a mapping to run (available: {', '.join(PREBUILT_MAPPINGS.keys())})")
+parser.add_argument('-d', '--device-id', default=1, type=int, help="VJoy device ID")
+args = parser.parse_args()
 
 openvr.init(openvr.VRApplication_Overlay)
 vrsystem = openvr.VRSystem()
 TICK_SECONDS = 1/TICKS_PER_SECOND
 
-contoller_mapping = MAPPING(vrsystem, VJOY_DEVICE_ID)
+contoller_mapping = PREBUILT_MAPPINGS[args.mapping](vrsystem, args.device_id)
 
 while True:
     before_work = time.time()

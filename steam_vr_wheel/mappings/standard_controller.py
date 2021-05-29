@@ -7,7 +7,7 @@ from steam_vr_wheel.mappings.nodes.axis import Axis, ControllerAxis, RollAxis, P
 from steam_vr_wheel.mappings.nodes.axis_helpers import ScaleAxis, AxisShifter
 from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerState, ControllerStateByType, ControllerStateGenerator, VrSystemState
 
-from steam_vr_wheel.pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z, HID_USAGE_RX, HID_USAGE_RY, HID_USAGE_RZ, HID_USAGE_SL0
+from pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z, HID_USAGE_RX, HID_USAGE_RY, HID_USAGE_RZ, HID_USAGE_SL0
 from steam_vr_wheel.controller_mapping import ControllerMapping
 import openvr
 

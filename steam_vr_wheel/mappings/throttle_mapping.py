@@ -8,7 +8,7 @@ from steam_vr_wheel.mappings.nodes.axis_helpers import ScaleAxis, PushPullAxis
 from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerStateByType, VrSystemState
 from steam_vr_wheel.controller_mapping import ControllerMapping
 
-from steam_vr_wheel.pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z
+from pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z
 
 # CONFIG SETTINGS FOR MAPPING
 TWIST_GESTURE_THRESHOLD = 0.8
