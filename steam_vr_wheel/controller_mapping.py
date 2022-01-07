@@ -1,14 +1,16 @@
 from abc import abstractmethod
 import logging
 import time
-from steam_vr_wheel.mappings.nodes.axis import Axis
-from steam_vr_wheel.mappings.nodes.button import Button
-from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer
-from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerRole, DeviceClass, VrSystemState
 from typing import Iterable, Iterator
 
 import openvr
 from pyvjoy.vjoydevice import VJoyDevice
+
+from steam_vr_wheel.mappings.nodes.types import Axis, Button
+from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer
+from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerRole, DeviceClass, VrSystemState
+from steam_vr_wheel.processor import Processor
+
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(level name)s] %(name)s - %(message)s")
@@ -31,6 +33,7 @@ class ControllerMapping:
     AXIS_PRECISION = 0x8000
     DEVICE_WAIT_TIMEOUT = 120  # two minutes
     DEVICE_POLL_TIME = 5       # five seconds
+    PROCESSOR_WORKERS = 5      # five threads
     vr_system: openvr.IVRSystem
     vjoy_device_id: int
 
@@ -48,13 +51,14 @@ class ControllerMapping:
         self.root_node = VrSystemState(self.vr_system)
         logger.info(f"VR system bound. Claiming target VJoy device {self.vjoy_device_id}...")
         self.vjoy_device = VJoyDevice(self.vjoy_device_id)
-        logger.info(f"Claimed. Polling for required controllers...")
+        logger.info("Claimed. Polling for required controllers...")
         self.wait_for_required_devices()
         logger.info("All required controllers found.")
         self.axis_mapping = self.generate_axis_mapping(self.root_node)
         self.button_mapping = self.generate_button_mapping(self.root_node)
         self.event_triggers = self.generate_event_triggers(self.root_node)
         self.current_tick = -1
+        self.processor = Processor(self.root_node, self.PROCESSOR_WORKERS)
 
     @property
     def required_devices(self) -> Iterable[tuple[DeviceClass, ControllerRole]]:
@@ -100,7 +104,7 @@ class ControllerMapping:
 
     def tick(self) -> None:
         self.current_tick += 1
-        self.root_node.update(self.current_tick)
+        self.processor.process_for_tick(self.current_tick)
 
         self.sync_axes()
         self.sync_buttons()

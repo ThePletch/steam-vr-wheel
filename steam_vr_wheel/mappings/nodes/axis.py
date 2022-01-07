@@ -2,9 +2,7 @@ import math
 from typing import Any, Hashable, Literal
 
 from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerStateConsumer
-from steam_vr_wheel.mappings.nodes.value_generator import ValueGenerator
 
-Axis = ValueGenerator[float]
 
 DirectAxis = ControllerStateConsumer[float]
 
