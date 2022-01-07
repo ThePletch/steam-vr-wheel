@@ -6,10 +6,10 @@ from typing import Iterable, Iterator
 import openvr
 from pyvjoy.vjoydevice import VJoyDevice
 
-from steam_vr_wheel.mappings.nodes.types import Axis, Button
-from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer
-from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerRole, DeviceClass, VrSystemState
-from steam_vr_wheel.processor import Processor
+from vr_to_joystick.mappings.nodes.types import Axis, Button
+from vr_to_joystick.mappings.nodes.value_generator import ValueConsumer
+from vr_to_joystick.mappings.nodes.vr_system_state import ControllerRole, DeviceClass, VrSystemState
+from vr_to_joystick.processor import Processor
 
 
 logger = logging.getLogger(__name__)

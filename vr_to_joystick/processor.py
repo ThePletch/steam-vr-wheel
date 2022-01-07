@@ -3,7 +3,7 @@ from queue import Queue
 from threading import Thread
 from typing import Any
 
-from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer, ValueGenerator
+from vr_to_joystick.mappings.nodes.value_generator import ValueConsumer, ValueGenerator
 
 
 def handler(tick: int, node_analysis_queue: Queue[ValueConsumer]) -> None:

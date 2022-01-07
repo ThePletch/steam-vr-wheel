@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Any
 
-from steam_vr_wheel.mappings.nodes.types import Axis, Button
+from vr_to_joystick.mappings.nodes.types import Axis, Button
 
 
 class SwitchAxis(Axis):
