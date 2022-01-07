@@ -1,6 +1,6 @@
-from steam_vr_wheel.mappings.nodes.axis import Axis
-from steam_vr_wheel.mappings.nodes.button import Button
 from typing import Any, Hashable, Type
+
+from steam_vr_wheel.mappings.nodes.types import Axis, Button
 
 
 class AxisMutator(Axis):

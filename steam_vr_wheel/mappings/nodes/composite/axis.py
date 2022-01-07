@@ -1,7 +1,7 @@
 from abc import abstractmethod
-from steam_vr_wheel.mappings.nodes.button import Button
-from steam_vr_wheel.mappings.nodes.axis import Axis
 from typing import Any
+
+from steam_vr_wheel.mappings.nodes.types import Axis, Button
 
 
 class SwitchAxis(Axis):

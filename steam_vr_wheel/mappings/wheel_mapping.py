@@ -1,22 +1,23 @@
-from steam_vr_wheel.mappings.nodes.event_triggers import HapticPulseTrigger
-from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer
-from typing import Iterable
-import openvr
 import math
+from typing import Iterable
 
-from steam_vr_wheel.mappings.nodes.composite.axis import DifferenceAxis
-from steam_vr_wheel.mappings.nodes.button_helpers import AxisThresholdButton, CircleGesture, GestureButton, MultiClickButton, SequentialGesture, ToggleButton
-from steam_vr_wheel.mappings.nodes.composite.button import AndButton, NotButton, StickyPairButton
-from steam_vr_wheel.mappings.nodes.axis import Axis, ControllerAxis, PitchAxis, RollAxis, XAxis, YAxis, ZAxis
+import openvr
+from pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z, HID_USAGE_RX, HID_USAGE_RZ, HID_USAGE_SL0, HID_USAGE_SL1
 
-
-from steam_vr_wheel.mappings.nodes.button import Button, DirectButton
+from steam_vr_wheel.controller_mapping import ControllerMapping
+from steam_vr_wheel.mappings.nodes.axis import ControllerAxis, PitchAxis, RollAxis, XAxis, YAxis, ZAxis
 from steam_vr_wheel.mappings.nodes.axis_helpers import DeadzoneAxis, GatedAxis, ScaleAxis
+from steam_vr_wheel.mappings.nodes.button import DirectButton
+from steam_vr_wheel.mappings.nodes.button_helpers import AxisThresholdButton, CircleGesture, GestureButton,\
+    MultiClickButton, SequentialGesture, ToggleButton
+from steam_vr_wheel.mappings.nodes.composite.axis import DifferenceAxis
+from steam_vr_wheel.mappings.nodes.composite.button import AndButton, NotButton, StickyPairButton
+from steam_vr_wheel.mappings.nodes.event_triggers import HapticPulseTrigger
+from steam_vr_wheel.mappings.nodes.types import Axis, Button
+from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer
 from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerStateByType, ControllerStateGenerator, VrSystemState
 from steam_vr_wheel.mappings.nodes.wheel import Wheel
-from steam_vr_wheel.controller_mapping import ControllerMapping
 
-from pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z, HID_USAGE_RX, HID_USAGE_RY, HID_USAGE_RZ, HID_USAGE_SL0, HID_USAGE_SL1
 
 TWIST_GESTURE_THRESHOLD = 0.8
 TOUCHPAD_EDGE_BUTTON_THRESHOLD = 0.7
@@ -77,7 +78,7 @@ class WheelMapping(ControllerMapping):
         }
 
     def trackpad_edge_buttons(self, controller_state: ControllerStateGenerator,
-                              require_press=False) -> Iterable[Button]:
+                              require_press: bool = False) -> Iterable[Button]:
         base_buttons = [
             AxisThresholdButton(
                 TOUCHPAD_EDGE_BUTTON_THRESHOLD,
