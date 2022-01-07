@@ -1,0 +1,9 @@
+*.pyc
+*.swp
+*.egg-info
+*.spec
+build
+dist
+.idea/
+*.idea/
+.vscode/

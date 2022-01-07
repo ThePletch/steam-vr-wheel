@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+import argparse
+from steam_vr_wheel.mappings.throttle_mapping import ThrottleMapping
+from steam_vr_wheel.mappings.wheel_mapping import WheelMapping
+import time
+
+import openvr
+import sys
+
+TICKS_PER_SECOND = 30
+
+PREBUILT_MAPPINGS = {
+    'throttle': ThrottleMapping,
+    'wheel': WheelMapping,
+}
+
+parser = argparse.ArgumentParser(description="Run a SteamVR to VJoy mapping")
+parser.add_argument('mapping', type=str, help=f"The name of a mapping to run (available: {', '.join(PREBUILT_MAPPINGS.keys())})")
+parser.add_argument('-d', '--device-id', default=1, type=int, help="VJoy device ID")
+args = parser.parse_args()
+
+openvr.init(openvr.VRApplication_Overlay)
+vrsystem = openvr.VRSystem()
+TICK_SECONDS = 1/TICKS_PER_SECOND
+
+contoller_mapping = PREBUILT_MAPPINGS[args.mapping](vrsystem, args.device_id)
+
+while True:
+    before_work = time.time()
+    contoller_mapping.tick()
+    after_work = time.time()
+    left = TICK_SECONDS - (after_work - before_work)
+    if left > 0:
+        time.sleep(left)

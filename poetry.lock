@@ -1,0 +1,80 @@
+[[package]]
+name = "autopep8"
+version = "1.5.7"
+description = "A tool that automatically formats Python code to conform to the PEP 8 style guide"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pycodestyle = ">=2.7.0"
+toml = "*"
+
+[[package]]
+name = "openvr"
+version = "1.16.801"
+description = "Unofficial python bindings for Valve OpenVR SDK"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+pyqt5 = ["numpy", "pyopengl", "pyqt5", "jinja2"]
+pyside2 = ["numpy", "pyopengl", "pyside2"]
+generate = ["clang"]
+glfw = ["numpy", "pyopengl", "glfw"]
+opengl = ["numpy", "pyopengl"]
+sdl2 = ["numpy", "pyopengl", "pysdl2"]
+wx = ["numpy", "pyopengl", "wxpython"]
+
+[[package]]
+name = "pycodestyle"
+version = "2.7.0"
+description = "Python style guide checker"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
+name = "pyvjoy"
+version = "1.0.1"
+description = "Python bindings for vJoy"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "toml"
+version = "0.10.2"
+description = "Python Library for Tom's Obvious, Minimal Language"
+category = "dev"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.9"
+content-hash = "26c03caf31bd61ed0aae6c52ab9a354bcdfc1293c7978eabfd7659de2778fb26"
+
+[metadata.files]
+autopep8 = [
+    {file = "autopep8-1.5.7-py2.py3-none-any.whl", hash = "sha256:aa213493c30dcdac99537249ee65b24af0b2c29f2e83cd8b3f68760441ed0db9"},
+    {file = "autopep8-1.5.7.tar.gz", hash = "sha256:276ced7e9e3cb22e5d7c14748384a5cf5d9002257c0ed50c0e075b68011bb6d0"},
+]
+openvr = [
+    {file = "openvr-1.16.801-py3-none-any.whl", hash = "sha256:26c6ada64e64836b798e886eb91294afd190a08f10dd226468a58a98f0632b2b"},
+    {file = "openvr-1.16.801-py3.6.egg", hash = "sha256:72f53c276793a0225761a3626a808317814d38726a15d5a6984bc868bc8801f0"},
+    {file = "openvr-1.16.801.tar.gz", hash = "sha256:ec9448b50e9b72aa54e1b5c1ba40005c1afe8691e54d2032d954ac31438d9d6a"},
+]
+pycodestyle = [
+    {file = "pycodestyle-2.7.0-py2.py3-none-any.whl", hash = "sha256:514f76d918fcc0b55c6680472f0a37970994e07bbb80725808c17089be302068"},
+    {file = "pycodestyle-2.7.0.tar.gz", hash = "sha256:c389c1d06bf7904078ca03399a4816f974a1d590090fecea0c63ec26ebaf1cef"},
+]
+pyvjoy = [
+    {file = "pyvjoy-1.0.1-py3-none-any.whl", hash = "sha256:00a6c02259758125ddefa76699352a373f75c5a493b166d837dbe52111a2f85f"},
+    {file = "pyvjoy-1.0.1.tar.gz", hash = "sha256:e3e1382034a94353c802b3eea231b0fa950f8e726a813690c7ac706df807acad"},
+]
+toml = [
+    {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
+    {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
+]
