@@ -1,8 +1,8 @@
 import math
 from typing import Any
 
-from steam_vr_wheel.mappings.nodes.types import Axis
-from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerStateGenerator
+from vr_to_joystick.mappings.nodes.types import Axis
+from vr_to_joystick.mappings.nodes.vr_system_state import ControllerStateGenerator
 
 
 # Axis that reports the angle between a left and right controller.

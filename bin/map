@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import argparse
-from steam_vr_wheel.mappings.throttle_mapping import ThrottleMapping
-from steam_vr_wheel.mappings.wheel_mapping import WheelMapping
+from vr_to_joystick.mappings.throttle_mapping import ThrottleMapping
+from vr_to_joystick.mappings.wheel_mapping import WheelMapping
 import time
 
 import openvr
