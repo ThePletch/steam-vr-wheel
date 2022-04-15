@@ -1,6 +1,6 @@
 from typing import Any, Hashable, Type
 
-from vr_to_joystick.mappings.nodes.types import Axis, Button
+from vr_to_joystick.nodes.types import Axis, Button
 
 
 class AxisMutator(Axis):

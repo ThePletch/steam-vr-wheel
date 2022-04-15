@@ -2,9 +2,9 @@ from functools import reduce
 import time
 from typing import Any, Callable, Hashable, Literal, Union
 
-from vr_to_joystick.mappings.nodes.axis_helpers import DeltaAxis
-from vr_to_joystick.mappings.nodes.composite.button import AndButton, StickyPairButton
-from vr_to_joystick.mappings.nodes.types import Axis, BaseButton, Button
+from vr_to_joystick.nodes.axis_helpers import DeltaAxis
+from vr_to_joystick.nodes.composite.button import AndButton, StickyPairButton
+from vr_to_joystick.nodes.types import Axis, BaseButton, Button
 
 
 Comparator = Literal['<', '<=', '>', '>=']

@@ -1,7 +1,7 @@
 import time
 from typing import Any
 
-from vr_to_joystick.mappings.nodes.types import BaseButton
+from vr_to_joystick.nodes.types import BaseButton
 
 
 class AlwaysOffButton(BaseButton):

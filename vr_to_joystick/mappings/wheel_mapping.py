@@ -5,18 +5,18 @@ import openvr
 from pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z, HID_USAGE_RX, HID_USAGE_RZ, HID_USAGE_SL0, HID_USAGE_SL1
 
 from vr_to_joystick.controller_mapping import ControllerMapping
-from vr_to_joystick.mappings.nodes.axis import ControllerAxis, PitchAxis, RollAxis, XAxis, YAxis, ZAxis
-from vr_to_joystick.mappings.nodes.axis_helpers import DeadzoneAxis, GatedAxis, ScaleAxis
-from vr_to_joystick.mappings.nodes.button import DirectButton
-from vr_to_joystick.mappings.nodes.button_helpers import AxisThresholdButton, CircleGesture, GestureButton,\
+from vr_to_joystick.nodes.axis import ControllerAxis, PitchAxis, RollAxis, XAxis, YAxis, ZAxis
+from vr_to_joystick.nodes.axis_helpers import DeadzoneAxis, GatedAxis, ScaleAxis
+from vr_to_joystick.nodes.button import DirectButton
+from vr_to_joystick.nodes.button_helpers import AxisThresholdButton, CircleGesture, GestureButton,\
     MultiClickButton, SequentialGesture, ToggleButton
-from vr_to_joystick.mappings.nodes.composite.axis import DifferenceAxis
-from vr_to_joystick.mappings.nodes.composite.button import AndButton, NotButton, StickyPairButton
-from vr_to_joystick.mappings.nodes.event_triggers import HapticPulseTrigger
-from vr_to_joystick.mappings.nodes.types import Axis, Button
-from vr_to_joystick.mappings.nodes.value_generator import ValueConsumer
-from vr_to_joystick.mappings.nodes.vr_system_state import ControllerStateByType, ControllerStateGenerator, VrSystemState
-from vr_to_joystick.mappings.nodes.wheel import Wheel
+from vr_to_joystick.nodes.composite.axis import DifferenceAxis
+from vr_to_joystick.nodes.composite.button import AndButton, NotButton, StickyPairButton
+from vr_to_joystick.nodes.event_triggers import HapticPulseTrigger
+from vr_to_joystick.nodes.types import Axis, Button
+from vr_to_joystick.nodes.value_generator import ValueConsumer
+from vr_to_joystick.nodes.vr_system_state import ControllerStateByType, ControllerStateGenerator, VrSystemState
+from vr_to_joystick.nodes.wheel import Wheel
 
 
 TWIST_GESTURE_THRESHOLD = 0.8

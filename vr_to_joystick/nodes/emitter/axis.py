@@ -1,6 +1,6 @@
 from typing import Any
 
-from vr_to_joystick.mappings.nodes.types import Axis
+from vr_to_joystick.nodes.types import Axis
 
 
 # n.b. for consistency's sake, we may want this to still follow the class factory pattern

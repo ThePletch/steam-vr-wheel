@@ -6,10 +6,10 @@ from typing import Iterable, Iterator
 import openvr
 from pyvjoy.vjoydevice import VJoyDevice
 
-from vr_to_joystick.mappings.nodes.types import Axis, Button
-from vr_to_joystick.mappings.nodes.value_generator import ValueConsumer
-from vr_to_joystick.mappings.nodes.vr_system_state import ControllerRole, DeviceClass, VrSystemState
-from vr_to_joystick.processor import Processor
+from vr_to_joystick.nodes.types import Axis, Button
+from vr_to_joystick.nodes.value_generator import ValueConsumer
+from vr_to_joystick.nodes.vr_system_state import ControllerRole, DeviceClass, VrSystemState
+from vr_to_joystick.serial_processor import SerialProcessor
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,6 @@ class ControllerMapping:
     AXIS_PRECISION = 0x8000
     DEVICE_WAIT_TIMEOUT = 120  # two minutes
     DEVICE_POLL_TIME = 5       # five seconds
-    PROCESSOR_WORKERS = 5      # five threads
     vr_system: openvr.IVRSystem
     vjoy_device_id: int
 
@@ -58,7 +57,7 @@ class ControllerMapping:
         self.button_mapping = self.generate_button_mapping(self.root_node)
         self.event_triggers = self.generate_event_triggers(self.root_node)
         self.current_tick = -1
-        self.processor = Processor(self.root_node, self.PROCESSOR_WORKERS)
+        self.processor = SerialProcessor(self.root_node)
 
     @property
     def required_devices(self) -> Iterable[tuple[DeviceClass, ControllerRole]]:

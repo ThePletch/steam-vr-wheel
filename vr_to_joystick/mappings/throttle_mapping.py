@@ -2,13 +2,13 @@ import openvr
 from pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z
 
 from vr_to_joystick.controller_mapping import ControllerMapping
-from vr_to_joystick.mappings.nodes.axis import ControllerAxis, ZAxis
-from vr_to_joystick.mappings.nodes.axis_helpers import ScaleAxis, PushPullAxis
-from vr_to_joystick.mappings.nodes.button import DirectButton
-from vr_to_joystick.mappings.nodes.button_helpers import AxisThresholdButton, GestureButton
-from vr_to_joystick.mappings.nodes.composite.axis import InvertedAxis
-from vr_to_joystick.mappings.nodes.types import Axis, Button
-from vr_to_joystick.mappings.nodes.vr_system_state import ControllerStateByType, VrSystemState
+from vr_to_joystick.nodes.axis import ControllerAxis, ZAxis
+from vr_to_joystick.nodes.axis_helpers import ScaleAxis, PushPullAxis
+from vr_to_joystick.nodes.button import DirectButton
+from vr_to_joystick.nodes.button_helpers import AxisThresholdButton, GestureButton
+from vr_to_joystick.nodes.composite.axis import InvertedAxis
+from vr_to_joystick.nodes.types import Axis, Button
+from vr_to_joystick.nodes.vr_system_state import ControllerStateByType, VrSystemState
 
 
 # CONFIG SETTINGS FOR MAPPING
