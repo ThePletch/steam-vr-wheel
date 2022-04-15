@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "steam-vr-wheel"
+name = "vr-to-joystick"
 version = "0.1.0"
 description = "Framework for mapping VR controllers to virtual joysticks"
 authors = ["Steve Pletcher <steve@steve-pletcher.com>"]

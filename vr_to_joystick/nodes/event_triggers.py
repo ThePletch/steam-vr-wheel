@@ -2,8 +2,8 @@ from typing import Any, Hashable
 
 from openvr import VRSystem
 
-from steam_vr_wheel.mappings.nodes.types import Button, ButtonTickState
-from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer
+from vr_to_joystick.nodes.types import Button, ButtonTickState
+from vr_to_joystick.nodes.value_generator import ValueConsumer
 
 
 class HapticPulse(ValueConsumer):

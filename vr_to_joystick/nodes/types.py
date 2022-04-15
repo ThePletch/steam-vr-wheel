@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Any, Literal, TypedDict
 
-from steam_vr_wheel.mappings.nodes.value_generator import ValueGenerator
+from vr_to_joystick.nodes.value_generator import ValueGenerator
 
 Axis = ValueGenerator[float]
 

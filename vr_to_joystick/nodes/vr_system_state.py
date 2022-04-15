@@ -3,7 +3,7 @@ from typing import Any, Callable, Hashable, Iterable, Literal, TypeVar, TypedDic
 
 import openvr
 
-from steam_vr_wheel.mappings.nodes.value_generator import ValueGenerator
+from vr_to_joystick.nodes.value_generator import ValueGenerator
 
 DeviceClass = Literal['controller', 'generic_tracker', 'hmd']
 

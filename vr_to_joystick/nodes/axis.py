@@ -1,7 +1,7 @@
 import math
 from typing import Any, Hashable, Literal
 
-from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerStateConsumer
+from vr_to_joystick.nodes.vr_system_state import ControllerStateConsumer
 
 
 DirectAxis = ControllerStateConsumer[float]

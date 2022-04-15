@@ -1,7 +1,7 @@
 from typing import Any, Hashable
 
-from steam_vr_wheel.mappings.nodes.types import BaseButton, Button, ButtonState
-from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerStateConsumer
+from vr_to_joystick.nodes.types import BaseButton, Button, ButtonState
+from vr_to_joystick.nodes.vr_system_state import ControllerStateConsumer
 
 
 # Button activated when the controller moves faster than the given threshold (in meters per second)

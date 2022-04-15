@@ -34,8 +34,7 @@ class MultitonNode(type):
         except KeyError:
             logger.debug(f"Cache miss for {cls.__name__} with args {', '.join(repr_args)}, building new instance")
 
-            # type: ignore # mypy gets confused by metaclass typing
-            new_instance = super(MultitonNode, cls).__call__(*args, **kwargs)
+            new_instance = super(MultitonNode, cls).__call__(*args, **kwargs)  # type: ignore # mypy gets confused by metaclass typing
             MultitonNode.__instances[cls.__name__][instance_hash] = new_instance
 
         return new_instance

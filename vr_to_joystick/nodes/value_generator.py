@@ -2,7 +2,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Hashable, TypeVar, Generic
 
-from steam_vr_wheel.mappings.multiton import MultitonNode
+from vr_to_joystick.nodes.multiton import MultitonNode
 
 O = TypeVar('O')
 

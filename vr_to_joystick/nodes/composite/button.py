@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Any
 
-from steam_vr_wheel.mappings.nodes.types import BaseButton, Button, ButtonState
+from vr_to_joystick.nodes.types import BaseButton, Button, ButtonState
 
 
 # Toggles between reporting the status of two buttons depending on the status of a third button

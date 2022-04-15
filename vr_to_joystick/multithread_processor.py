@@ -3,7 +3,7 @@ from queue import Queue
 from threading import Thread
 from typing import Any
 
-from steam_vr_wheel.mappings.nodes.value_generator import ValueConsumer, ValueGenerator
+from vr_to_joystick.nodes.value_generator import ValueConsumer, ValueGenerator
 
 
 def handler(tick: int, node_analysis_queue: Queue[ValueConsumer]) -> None:
@@ -23,8 +23,14 @@ def handler(tick: int, node_analysis_queue: Queue[ValueConsumer]) -> None:
         node_analysis_queue.task_done()
 
 
+####
+# Doesn't actually parallelize anything due to Python's GIL preventing
+#   true multithreading with shared memory.
+# Until conversion to Cython or similar, recommended to use SerialProcessor,
+#   since the overhead of handling threads makes this slower than serial.
+####
 @dataclass
-class Processor:
+class MultithreadProcessor:
     root_node: ValueGenerator[Any]
     handler_count: int = 2
 

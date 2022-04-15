@@ -1,7 +1,7 @@
 from typing import Hashable
 
-from steam_vr_wheel.mappings.nodes.types import BaseButton, ButtonEventType, ButtonState
-from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerStateConsumer, ControllerStatePackage
+from vr_to_joystick.nodes.types import BaseButton, ButtonEventType, ButtonState
+from vr_to_joystick.nodes.vr_system_state import ControllerStateConsumer, ControllerStatePackage
 
 
 # Basic button class. Reads the current value of an actual button on the controller.
