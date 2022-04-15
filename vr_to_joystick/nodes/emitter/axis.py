@@ -1,5 +1,6 @@
 from typing import Any
-from steam_vr_wheel.mappings.nodes.axis import Axis
+
+from vr_to_joystick.nodes.types import Axis
 
 
 # n.b. for consistency's sake, we may want this to still follow the class factory pattern

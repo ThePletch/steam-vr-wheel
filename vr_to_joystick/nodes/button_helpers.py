@@ -1,13 +1,10 @@
-from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerStateConsumer
-from steam_vr_wheel.mappings.nodes.axis import Axis
-from steam_vr_wheel.mappings.nodes.composite.button import AndButton, StickyPairButton
-import time
-
 from functools import reduce
-
-from steam_vr_wheel.mappings.nodes.axis_helpers import DeltaAxis
-from steam_vr_wheel.mappings.nodes.button import BaseButton, Button
+import time
 from typing import Any, Callable, Hashable, Literal, Union
+
+from vr_to_joystick.nodes.axis_helpers import DeltaAxis
+from vr_to_joystick.nodes.composite.button import AndButton, StickyPairButton
+from vr_to_joystick.nodes.types import Axis, BaseButton, Button
 
 
 Comparator = Literal['<', '<=', '>', '>=']
@@ -51,19 +48,6 @@ def AxisThresholdButton(threshold: float, comparator: Comparator) -> type[Button
             return self.comparator_function()(inputs['parent_axis'])
 
     return _ConfiguredAxisThresholdButton
-
-
-# Button activated when the controller moves faster than the given threshold (in meters per second)
-def Flick(threshold: float) -> type[Button]:
-    class _ConfiguredFlick(ControllerStateConsumer, BaseButton):
-        @classmethod
-        def _parameterized_on(cls) -> list[Hashable]:
-            return [threshold]
-
-        def get_button_state_this_tick(self, inputs: dict[str, Any]) -> bool:
-            return max(abs(v) for v in inputs['base_state']['velocity']) > threshold
-
-    return _ConfiguredFlick
 
 
 # todo make this less broad

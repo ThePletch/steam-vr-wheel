@@ -1,11 +1,13 @@
 from __future__ import annotations
 from abc import abstractmethod
-from steam_vr_wheel.mappings.multiton import MultitonNode
 from typing import Any, Hashable, TypeVar, Generic
+
+from vr_to_joystick.nodes.multiton import MultitonNode
 
 O = TypeVar('O')
 
 
+# todo add guard for current_value not being up to date when update called
 class ValueConsumer(metaclass=MultitonNode):
     requirements: set[str] = set()
     dependencies: dict[str, ValueGenerator[Any]]
@@ -62,9 +64,6 @@ class ValueConsumer(metaclass=MultitonNode):
         return self.last_tick_update == tick_index
 
     def update(self, tick_index: int) -> None:
-        if not self.dependencies_updated_for_tick(tick_index):
-            return
-
         inputs = {key: generator.current_value for key, generator in self.dependencies.items()}
 
         self.last_tick_update = tick_index
@@ -79,18 +78,12 @@ class ValueConsumer(metaclass=MultitonNode):
 class ValueGenerator(Generic[O], ValueConsumer):
     current_value: O
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
-        self.bound_children: list[ValueGenerator[Any]] = []
+        self.bound_children: list[ValueConsumer] = []
 
-    def bind_child(self, child: ValueGenerator[Any]) -> None:
+    def bind_child(self, child: ValueConsumer) -> None:
         self.bound_children.append(child)
-
-    def update(self, tick_index: int) -> None:
-        super().update(tick_index)
-
-        for child in self.bound_children:
-            child.update(tick_index)
 
     def update_with_inputs(self, inputs: dict[str, Any]) -> None:
         self.current_value = self.generate_output(inputs)

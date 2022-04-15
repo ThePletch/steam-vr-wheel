@@ -18,7 +18,8 @@ class Parameterized(Protocol):
 class MultitonNode(type):
     __instances: dict[str, dict[int, Parameterized]] = defaultdict(dict)
 
-    def __call__(cls: type[Parameterized], *args, **kwargs: dict[str, Any]) -> Parameterized:  # type: ignore # mypy gets confused by metaclass typing
+    # type: ignore # mypy gets confused by metaclass typing
+    def __call__(cls: type[Parameterized], *args: Any, **kwargs: dict[str, Any]) -> Parameterized:
         hashed_args = [hash(arg) for arg in args]
         hashed_kwargs = [(key, hash(value)) for key, value in kwargs.items()]
 

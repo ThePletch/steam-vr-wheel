@@ -1,6 +1,7 @@
-from typing import Any
-from steam_vr_wheel.mappings.nodes.button import BaseButton
 import time
+from typing import Any
+
+from vr_to_joystick.nodes.types import BaseButton
 
 
 class AlwaysOffButton(BaseButton):

@@ -1,15 +1,16 @@
-from steam_vr_wheel.mappings.nodes.button import Button, DirectButton
-from steam_vr_wheel.mappings.nodes.button_helpers import AxisThresholdButton
 import math
 
-from steam_vr_wheel.mappings.nodes.value_generator import ValueGenerator
-from steam_vr_wheel.mappings.nodes.axis import Axis, ControllerAxis, RollAxis, PitchAxis, XAxis, YAxis, YawAxis, ZAxis
-from steam_vr_wheel.mappings.nodes.axis_helpers import ScaleAxis, AxisShifter
-from steam_vr_wheel.mappings.nodes.vr_system_state import ControllerState, ControllerStateByType, ControllerStateGenerator, VrSystemState
-
-from pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z, HID_USAGE_RX, HID_USAGE_RY, HID_USAGE_RZ, HID_USAGE_SL0
-from steam_vr_wheel.controller_mapping import ControllerMapping
 import openvr
+from pyvjoy.vjoydevice import HID_USAGE_X, HID_USAGE_Y, HID_USAGE_Z, HID_USAGE_RX, HID_USAGE_RY, HID_USAGE_RZ, HID_USAGE_SL0
+
+from vr_to_joystick.controller_mapping import ControllerMapping
+from vr_to_joystick.nodes.axis import ControllerAxis, RollAxis, PitchAxis, XAxis, YAxis, YawAxis, ZAxis
+from vr_to_joystick.nodes.axis_helpers import ScaleAxis, AxisShifter
+from vr_to_joystick.nodes.button import DirectButton
+from vr_to_joystick.nodes.button_helpers import AxisThresholdButton
+from vr_to_joystick.nodes.types import Button, Axis
+from vr_to_joystick.nodes.vr_system_state import ControllerStateByType, ControllerStateGenerator, VrSystemState
+
 
 ATAN_AXIS_SCALAR = 1 / (2 * math.pi)
 TOUCHPAD_EDGE_BUTTON_THRESHOLD = 0.8

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "steam-vr-wheel"
+name = "vr-to-joystick"
 version = "0.1.0"
 description = "Framework for mapping VR controllers to virtual joysticks"
 authors = ["Steve Pletcher <steve@steve-pletcher.com>"]
@@ -12,6 +12,7 @@ pyvjoy = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.7"
+mypy = "^0.931"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
